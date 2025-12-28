@@ -15,7 +15,7 @@ const Terminal = () => {
     isrendered.current = true;
     const terminal = new Xterminal({
        
-        rows:15
+        rows:10
     });
     terminal.open(terminalRef.current); 
 

@@ -1,27 +1,312 @@
-*{
+:root {
+    --bg: #0f111a;
+    --panel: #0b0d14;
+    --muted: #9ca3af;
+    --accent: #22d3ee;
+    --primary-text: #e5e7eb;
+    --secondary-border: #1f2933;
+    --hover: #1e293b;
+    --highlight: #2563eb;
+    --icon: #ffde22;
+    --scroll-thumb: #374151;
+}
+
+/* RESET */
+* {
     margin: 0;
     padding: 0;
-    font-family:monospace;
+    box-sizing: border-box;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+        "Roboto Mono", monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-.main{
+
+/* ROOT */
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--primary-text);
+    overflow: hidden;
+    /* page-level scrolling disabled; panels handle their own scroll */
+}
+
+/* MAIN LAYOUT */
+.main {
     display: flex;
+    flex-direction: column;
     height: 100vh;
     width: 100vw;
-    flex-direction: column;
+    overflow: hidden;
 }
-.othereditor-container{
-    height: 80vh;
-    display: flex;
-    flex-direction: row;
 
+/* EDITOR + FILE TREE: allow inner flex children to manage overflow */
+.othereditor-container {
+    display: flex;
+    flex: 1;
+    /* take remaining vertical space above terminal */
+    min-height: 0;
+    /* IMPORTANT: allow children to shrink properly */
+    background: var(--bg);
+    border-bottom: 1px solid var(--secondary-border);
 }
-.files{
-    width: 20%;
-    height: 100%;
-    border-right: 2px solid black;
+
+/* FILE TREE / SIDEBAR */
+.files {
+    width: 18%;
+    min-width: 220px;
+    max-width: 360px;
+    background: var(--panel);
+    border-right: 1px solid var(--secondary-border);
     overflow-y: auto;
+    padding: 12px;
+    padding-top: 14px;
 }
-.editor{
-    width: 80%;
+
+/* File tree scrollbar */
+.files::-webkit-scrollbar {
+    width: 8px;
+}
+
+.files::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 10px;
+}
+
+/* EDITOR CONTAINER */
+.editorparent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* critical for ace/editor overflow */
+    background: var(--bg);
+}
+
+/* FILE PATH BAR / HEADER */
+.editorparent>.pathbar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    font-size: 13px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--secondary-border);
+    color: var(--muted);
+    user-select: none;
+}
+
+/* Save status pill */
+.save-status {
+    margin-left: auto;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.save-status.saved {
+    color: #bbf7d0;
+    background: rgba(27, 163, 80, 0.06);
+    border-color: rgba(27, 163, 80, 0.12);
+}
+
+.save-status.unsaved {
+    color: #ffd6d6;
+    background: rgba(245, 101, 101, 0.06);
+    border-color: rgba(245, 101, 101, 0.12);
+}
+
+/* EDITOR area (ACE) */
+.editor {
+    flex: 1;
+    min-height: 0;
+    /* allow ace to handle internal scrolling */
+    background: var(--bg);
+    display: block;
+    position: relative;
+}
+
+/* Make sure ace fills the container */
+.editor .ace_editor,
+.ace_editor {
+    width: 100% !important;
+    height: 100% !important;
+    background: var(--bg) !important;
+    color: var(--primary-text) !important;
+    font-size: 13px;
+}
+
+/* Ace gutter, cursor and active line */
+.ace_gutter {
+    background: var(--panel) !important;
+    color: #6b7280 !important;
+}
+
+.ace_cursor {
+    color: var(--accent) !important;
+}
+
+.ace_marker-layer .ace_active-line {
+    background: rgba(17, 24, 39, 0.6) !important;
+}
+
+/* ACE selection / matching highlight */
+.ace_marker-layer .ace_selection {
+    background: rgba(34, 211, 238, 0.12) !important;
+}
+
+.ace_marker-layer .ace_bracket {
+    margin-top: -1px;
+}
+
+/* TERMINAL BEHAVIOR (professional) */
+.terminal-container {
+    min-height: 140px;
+    /* minimum visible terminal */
+    max-height: 40vh;
+    /* terminal can grow up to 40% of viewport height */
+    height: auto;
+    background: #020617;
+    border-top: 1px solid var(--secondary-border);
+    padding: 8px;
+    overflow: hidden;
+    /* internal xterm handles scroll */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    resize: vertical;
+    /* allow user to resize panel (optional) */
+}
+
+/* terminal inner wrapper to manage scroll inside */
+.terminal-inner {
+    flex: 1;
+    min-height: 0;
+    /* important for internal scrolling */
+    overflow: auto;
+    padding: 6px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.4));
+}
+
+/* XTERM styling */
+.xterm,
+.terminal-inner .xterm {
     height: 100%;
+    width: 100%;
+    padding: 6px;
+    overflow: auto;
+    /* xterm content may overflow vertically */
+}
+
+/* Terminal scrollbar */
+.terminal-inner::-webkit-scrollbar,
+.xterm::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-inner::-webkit-scrollbar-thumb,
+.xterm::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 8px;
+}
+
+/* FILE TREE ITEMS (UL / LI base) */
+.files ul {
+    list-style: none;
+    padding-left: 6px;
+}
+
+.files li {
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #c7d2fe;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hover + active */
+.files li:hover {
+    background: var(--hover);
+}
+
+.files .active {
+    background: var(--highlight);
+    color: white;
+}
+
+/* folder/file icon size & color */
+.MuiSvgIcon-root {
+    font-size: 18px;
+    color: var(--icon);
+}
+
+/* small subtle transitions */
+.files li,
+.editorparent>.pathbar {
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+/* responsive tweaks */
+@media (max-width: 900px) {
+   
+
+    /* hide file tree on small screens */
+    .editorparent {
+        min-width: 0;
+    }
+}
+
+/* Accessibility focus outlines */
+.files li:focus,
+.editor .ace_editor:focus {
+    outline: 2px solid rgba(34, 211, 238, 0.12);
+    outline-offset: 2px;
+}
+
+/* Utility classes you might use */
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* small visual polish for the path display */
+.path-name {
+    color: var(--muted);
+    font-size: 13px;
+    display: inline-block;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* small divider for terminal handle (optional) */
+.terminal-handle {
+    height: 6px;
+    width: 36px;
+    margin: 0 auto;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+}
+.MuiSvgIcon-root {
+    font-size: 18px;
+    color: #ffde22;
 }
