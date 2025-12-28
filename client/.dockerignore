@@ -1,0 +1,24 @@
+# Node modules (do not copy to image)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Environment files
+.env
+
+# Local config files
+.vscode
+.idea
+
+# Git files
+.git
+.gitignore
+
+# Logs and temp
+*.log
+*.tmp
+.DS_Store
+
+# Build folders
+dist
+build

@@ -1,0 +1,27 @@
+
+
+services:
+  backend:
+    build: ./server
+    container_name: gs-backend
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./server:/app
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build: ./client
+    container_name: gs-frontend
+    ports:
+    - "5173:5173"
+    volumes:
+    - ./client:/app
+    depends_on:
+    - backend
+    environment:
+     - VITE_API_URL=http://localhost:9000
+
+     - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host 0.0.0.0

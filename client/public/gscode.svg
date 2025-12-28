@@ -1,0 +1,9 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagon -->
+  <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" fill="#FFD700"></polygon>
+
+  <!-- Code symbol </> -->
+  <text x="100" y="115" text-anchor="middle" font-size="50" fill="#000000" font-family="JetBrains Mono, monospace">
+    &lt;/&gt;
+  </text>
+</svg>
